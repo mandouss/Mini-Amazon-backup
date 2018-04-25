@@ -2,20 +2,17 @@ from django.http import Http404
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
 
+from carts.models import Cart
+
 from .models import Good
 # Create your views here.
 
 class GoodListView(ListView):
-    queryset = Good.objects.all()
+    #queryset = Good.objects.all()
     template_name = "goods/list.html"
 
-    # def get_context_data(self, *args, **kwargs):
-        # context = super(GoodListView, self).get_context_data(*args, **kwargs)
-        # print(context)
-        # return context
-
     def get_queryset(self, *args, **kwargs):
-        request = self. request
+        request = self.request
         return Good.objects.all()
 
 def good_list_view(request):
@@ -24,6 +21,33 @@ def good_list_view(request):
             'object_list' : queryset
     }
     return render(request, "goods/list.html", context)
+
+class GoodDetailSlugView(DetailView):
+    queryset = Good.objects.all()
+    template_name = "goods/detail.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(GoodDetailSlugView, self).get_context_data(*args, **kwargs)
+        request =self.request
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
+        context['cart'] = cart_obj
+        return context
+
+    def get_object(self, *args, **kwargs):
+        request = self.request
+        slug = self.kwargs.get('slug')
+        #instance = Good.objects.get_by_id(Good, slug=slug)
+        try:
+            instance = Good.objects.get(slug=slug)
+        except Good.DoesNotExist:
+            raise Http404("Not found..")
+        except Good.MultipleObjectsReturned:
+            qs = Good.objects.filter(slug=slug)
+            return qs.first()
+        except:
+            raise Http404("Uhhmmm")
+        return instance
+
 
 class GoodDetailView(DetailView):
     #queryset = Good.objects.all()

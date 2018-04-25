@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect
 from .forms import ContactForm, LoginForm, RegisterForm
 
 def home_page(request):
+    #print(request.session.get("first_name", "Unknown")) #get
     context = {
         "title":"Hello World!",        
-        "content":" Welcome to the homepage.",    
+        "content":" Welcome to the MiniAmazon.",    
         #"premium_content":"YEAHHHHHH:"    
     }
     if request.user.is_authenticated():
@@ -27,7 +28,7 @@ def contact_page(request):
     context = {
         "title":"Contact",        
         "content":"Welcome to the contact page.",
-        "form": contact_form
+        "form": contact_form,
     }
     if contact_form.is_valid():
         print(contact_form.cleaned_data)

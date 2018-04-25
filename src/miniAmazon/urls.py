@@ -19,23 +19,22 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
-
-from goods.views import GoodListView, good_list_view, GoodDetailView, good_detail_view
+from django.views.generic import TemplateView
 
 from .views import home_page, about_page, contact_page, login_page, register_page
 
 urlpatterns = [
-    url(r'^$', home_page),
-    url(r'^about/$', about_page),
-    url(r'^contact/$', contact_page),
-    url(r'^login/$', login_page),
-    url(r'^register/$', register_page),
-    url(r'^goods/$', GoodListView.as_view()),
-    url(r'^goods-fbv/$',good_list_view),
-    url(r'^goods/(?P<pk>\d+)/$', GoodDetailView.as_view()),
-    url(r'^goods-fbv/(?P<pk>\d+)/$',good_detail_view),
+    url(r'^$', home_page, name='home'),
+    url(r'^about/$', about_page, name='about'),
+    url(r'^contact/$', contact_page, name='contact'),
+    url(r'^login/$', login_page, name='login'),
+    url(r'^cart/', include("carts.urls", namespace='cart')),
+    url(r'^register/$', register_page, name='register'),
+    url(r'^bootstrap/$', TemplateView.as_view(template_name='bootstrap/example.html')),
+    url(r'^goods/', include("goods.urls", namespace='goods')),
+    url(r'^search/', include("search.urls", namespace='search')),
     url(r'^admin/', admin.site.urls),
 ]
 
