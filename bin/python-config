@@ -1,4 +1,4 @@
-#!/home/vcm/miniAmaon/bin/python
+#!/home/vcm/miniAmazon/bin/python
 
 import sys
 import getopt
